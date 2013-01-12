@@ -161,6 +161,9 @@ class Pattern(object):
     # unnamed pattern default name
     DEFAULT_NAME = "<?>"
 
+    def __new__(cls, *args, **kwargs):
+        return object.__new__(cls)
+
     ### creation
     def __init__(self, expression=None, name=None):
         ''' Common pattern intialization:
@@ -560,7 +563,7 @@ class Pattern(object):
         ''' representation of pattern creation syntax used by __repr__
             * defined on each pattern type
         '''
-        raise NotImplementedError
+        return str(self)
 
     def __repr__(self):
         ''' representation of pattern creation syntax
@@ -647,7 +650,8 @@ class Choice(Pattern):
             self = Klass(charset, expression,name)
             return self
         # else a Choice
-        self = Pattern.__new__(cls, patterns, expression, name)
+        self = super(Choice, cls).__new__(cls, patterns, expression, name)
+        self._copyargs = (patterns, expression, name)
         return self
 
     def __init__(self, patterns, expression=None, name=None):
@@ -655,8 +659,18 @@ class Choice(Pattern):
         '''
         self.patterns = patterns
         # define common attributes
-        Pattern.__init__(self, expression, name)
+        super(Choice, self).__init__(expression, name)
         self.wrapped = self.patterns    # --> _resetMemo
+
+    def __copy__(self):
+        args = clone(self._copyargs)
+        return Choice(*args)
+
+    def __deepcopy__(self, memo):
+        args = clone(self._copyargs)
+        ret = Choice(*args)
+        ret.__dict__ = clone(self.__dict__)
+        return ret
 
     def _realCheck(self, source, pos):
         ''' Check pattern match at position pos in source string.
@@ -710,7 +724,7 @@ class Sequence(Pattern):
         ''' Define name, patterns, memo.'''
         self.patterns = patterns
         # define common attributes
-        Pattern.__init__(self, expression, name)
+        super(Sequence, self).__init__(expression, name)
         self.wrapped = self.patterns    # --> _resetMemo
 
     def _realCheck(self, source, pos):
@@ -763,7 +777,7 @@ class Option(Pattern):
         self.pattern = pattern
         self.isOption = True
         # define common attributes
-        Pattern.__init__(self, expression, name)
+        super(Option, self).__init__(expression, name)
         self.wrapped = [self.pattern]   # --> _resetMemo
 
     def _realCheck(self, source, pos):
@@ -805,7 +819,7 @@ class Next(Pattern):
         ''' Define name, pattern, memo.'''
         self.pattern = pattern
         # define common attributes
-        Pattern.__init__(self, expression, name)
+        super(Next, self).__init__(expression, name)
         self.wrapped = [self.pattern]   # --> _resetMemo
 
     def _realCheck(self, source, pos):
@@ -847,7 +861,7 @@ class NextNot(Pattern):
         ''' Define name, pattern, memo.'''
         self.pattern = pattern
         # define common attributes
-        Pattern.__init__(self, expression, name)
+        super(NextNot, self).__init__(expression, name)
         self.wrapped = [self.pattern]   # --> _resetMemo
 
     def _realCheck(self, source, pos):
@@ -889,7 +903,7 @@ class ZeroOrMore(Pattern):
         ''' Define name, pattern, memo.'''
         self.pattern = pattern
         # define common attributes
-        Pattern.__init__(self, expression, name)
+        super(ZeroOrMore, self).__init__(expression, name)
         self.wrapped = [self.pattern]   # --> _resetMemo
 
     def _realCheck(self, source, pos):
@@ -929,7 +943,7 @@ class OneOrMore(Pattern):
         ''' Define name, pattern, memo.'''
         self.pattern = pattern
         # define common attributes
-        Pattern.__init__(self, expression, name)
+        super(OneOrMore, self).__init__(expression, name)
         self.wrapped = [self.pattern]   # --> _resetMemo
 
     def _realCheck(self, source, pos):
@@ -1005,10 +1019,22 @@ class Repetition(Pattern):
         # (contrary to the doc, no need to call __init__)
         if isinstance(pattern,Klass):
             self = String(pattern, numMin,numMax, expression,name)
+            self._copyargs = (pattern, numMin, numMax, expression, name)
             return self
         # else a Repetition
-        self = Pattern.__new__(cls,pattern, numMin,numMax, expression,name)
+        self = super(Repetition, cls).__new__(cls, pattern, numMin,numMax, expression,name)
+        self._copyargs = (pattern, numMin, numMax, expression, name)
         return self
+
+    def __copy__(self, *args):
+        args = clone(self._copyargs)
+        return Repetition(*args)
+
+    def __deepcopy__(self, memo):
+        args = clone(self._copyargs)
+        ret = Repetition(*args)
+        ret.__dict__ = clone(self.__dict__)
+        return ret
 
     def __init__(self, pattern, numMin=False,numMax=False, expression=None, name=None):
         ''' Define name, pattern, memo, numMin & numMax.'''
@@ -1167,7 +1193,7 @@ class Klass(Pattern):
         ''' normal output format
         '''
         # already computed by _cleanRepr(expression)
-        return self.format
+        return "%r"%(self.format,)
 
     def _message(self):
         ''' error message in case of failure '''
@@ -1435,7 +1461,8 @@ class Clone(Pattern):
     def __new__(cls, pattern, expression=None, name=None):
         ''' Clone original pattern. '''
         self = clone(pattern)
-        Pattern.__init__(self, expression, name)
+        self.expression = expression
+        self.name = name
         return self
 
 

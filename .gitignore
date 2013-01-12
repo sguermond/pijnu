@@ -1,3 +1,6 @@
 build
 *egg*
 *.pyc
+test_custom_toolset_numbers_transformParser.py
+
+test_external_toolset_numbers_transformParser.py

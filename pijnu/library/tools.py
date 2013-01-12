@@ -28,14 +28,20 @@ Overall Python toolset
 import sys
 from sys import exit as end
 from copy import copy, deepcopy as clone
-from sets import Set
+
+try:
+   set = set
+   Set = set
+except NameError:
+   from sets import Set as set
+
 
 # end
 end = sys.exit
 
 __all__ = [
           "end", "output", "write",
-          "Set", "Seq", "OrDict", "copy", "clone",
+          "Seq", "OrDict", "copy", "clone",
           "NL", "SPC", "TAB", "SPC3", "RULER",
           "fileText", "writeFile",
           ]

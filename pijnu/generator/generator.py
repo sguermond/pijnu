@@ -39,6 +39,8 @@ from pijnuParser import pijnuParser
 # pattern objects to parse pattern format --> getPattern
 from pijnuParser import pattern, patternDef
 
+import os, sys
+
 __all__ = ["getPattern","makeParser","fileText"]
 
 ### pattern generator
@@ -79,7 +81,7 @@ def getPattern(format):
 
 #
 ### parser generator
-def makeParser(grammarText, feedback=False):
+def makeParser(grammarText, feedback=False, outputPath=""):
     ''' Write parser code file. '''
     ''' example:
         from pijnu import makeParser, fileText
@@ -143,13 +145,19 @@ def make_parser(actions=None):
 
     ### write parser module --possible feedback on stdout
     print "... writing file ...\n"
-    writeFile(filename, code)
+    filepath = os.path.join(outputPath, filename)
+    writeFile(filepath, code)
     if feedback:
-        print fileText(filename)
+        print fileText(filepath)
 
     ### return parser object --if ever needed
-    modulename = filename[:-3]
-    module = __import__(modulename)
+    try:
+        if outputPath:
+            sys.path.insert(0, outputPath)
+        modulename = filename[:-3]
+        module = __import__(modulename)
+    finally:
+        sys.path.pop(0)
     return module.make_parser
 
 #

@@ -1,3 +1,5 @@
+You should probably use the https://github.com/peter17/pijnu official repository...
+
 Pijnu is a PEG parser generator and processor, written in Python, intended to be clear, easy, practical.
 
 Pijnu was created in 2009 by Denis "Spir" Derman and then transferred to Peter Potrowl (peter17 on GitHub) in June 2011.

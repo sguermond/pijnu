@@ -654,7 +654,7 @@ class Regexp(Pattern):
         def getre(p):
             if isinstance(p,Klass): 
                 charset = p.charset.replace('-', '\\-')
-                return "(?:[%s]|[^\\x00-\\x255])"%(re.escape(charset),)
+                return "(?:[%s]|[^\\x00-\\xff])"%(re.escape(charset),)
             elif isinstance(p,Char): 
                 return "(?:[%s])"%(re.escape(p.char),)
             elif isinstance(p,Word):
@@ -681,7 +681,15 @@ class Regexp(Pattern):
         restr = "((?:" + joiner.join( getre(p) for p in patterns ) + ")" + suffix + ")"
         self._re = re.compile(restr)
         if maxCount:
-            self.maxLen = max( [len(p.word) for p in patterns if isinstance(p,Word)] or [1] ) * maxCount
+            def patternLen(p):
+                if isinstance(p, Klass) or isinstance(p, Char):
+                    return 1
+                else:
+                    return len(p.word)
+            if joiner == "|":
+                self.maxLen = max( [patternLen(p) for p in patterns] or [1] ) * maxCount
+            else:
+                self.maxLen = sum( [patternLen(p) for p in patterns] ) * maxCount
         else:
             self.maxLen = None
         self.numMin, self.numMax = numMin, numMax
@@ -843,7 +851,7 @@ class Sequence(Pattern):
     def __copy__(self):
         args = clone(self._copyargs)
         ret = Sequence(*args)
-        ret.__dict__ = clone(self.__dict__)
+        ret.__dict__ = copy(self.__dict__)
         return ret
 
     def __deepcopy__(self, memo):

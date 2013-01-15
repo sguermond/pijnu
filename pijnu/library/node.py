@@ -154,7 +154,9 @@ class Node(object):
     NIL = Nil()
     # enumeration for node 'kind' attribute
     (LEAF, BRANCH) = (1, 2)
-
+    __slots__ = ['tag', 'value', 'pattern', 'form', 'source', 'start', 'end', 
+                'kind', 'snippet', 'id', 'title', 'isRecursive', 'isName', 'format', 'transform',
+                'name', 'topPatternName', 'definition'] 
     ### creation, value, action
     def __init__(self, pattern, value, start, end, source):
         ''' Define pattern, tag, value, kind, range.

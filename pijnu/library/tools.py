@@ -117,7 +117,7 @@ class Seq(list):
         ~ able to show as treeView for clear output
         ~ implements leaves to flatten nested seqs
         '''
-
+    __slots__ = []
     def __init__(self, *seq):
         ''' create seq as a specialized list
             ~ arg can be either a single sequential object

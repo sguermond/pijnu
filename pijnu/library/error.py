@@ -101,6 +101,8 @@ class MatchFailure(PijnuError):
     ''' standard match failure exception
     Used mainly to provide worthful feedback.
     '''
+    __slots__ = ['pattern', 'source', 'pos', 'wrap']
+
     def __init__(self, pattern, source, pos, wrap=False):
         ''' Record data. '''
         self.pattern = pattern
@@ -145,6 +147,7 @@ class EndOfText(PijnuError):
     ''' standard parse failure exception
         Used to avoid worse placeholder and provide feedback.
         '''
+    __slots__ = ['pattern', 'source', 'wrap']
     def __init__(self, pattern, source, wrap=False):
         ''' Record data. '''
         self.pattern = pattern

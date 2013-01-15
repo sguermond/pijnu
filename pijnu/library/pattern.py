@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
-
+global foo
+foo = False
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
 Copyright 2011-2012 Peter Potrowl <peter017@gmail.com> (current developer)
@@ -86,6 +87,16 @@ from error import *
 from charset import charset as toCharset
 from time import time   # for stats
 
+import re
+
+def allEqual(iterator):
+  try:
+     iterator = iter(iterator)
+     first = next(iterator)
+     return all(first == rest for rest in iterator)
+  except StopIteration:
+     return True
+
 
 # object used to collect statistics on match checks
 class Stats(object):
@@ -104,6 +115,8 @@ class Stats(object):
         self.successes = 0
         self.branches = 0
         self.leaves = 0
+        self.all_words = 0
+        self.all_words_fail = 0
 
     def time(self):
         if self.start_time is None or self.stop_time is None:
@@ -123,11 +136,14 @@ class Stats(object):
                 "       successes:      %s\n"
                 "           branches:   %s\n"
                 "           leaves:     %s\n"
+                "   all_words:          %s\n"
+                "   all_words_fail:     %s\n"
                 "%s"
                 %(
                 self.trials,self.memos,self.checks,
                 self.failures,self.matchFailures,self.EOTs,self.invalids,
                 self.successes,self.branches,self.leaves,
+                self.all_words, self.all_words_fail,
                 self.time()
                 )
         )
@@ -162,7 +178,9 @@ class Pattern(object):
     DEFAULT_NAME = "<?>"
 
     def __new__(cls, *args, **kwargs):
-        return object.__new__(cls)
+        self = object.__new__(cls)
+        self.name, self.format = kwargs.get('name', None), kwargs.get('expression', '')
+        return self
 
     ### creation
     def __init__(self, expression=None, name=None):
@@ -464,7 +482,6 @@ class Pattern(object):
             if Pattern.DO_STATS: Pattern.stats.memos += 1
             result = self.memo[pos]
             # outcome was success
-            r = result if isinstance(result,Node) else "*fail*"
             if isinstance(result,Node):
                 return result
             # outcome was failure
@@ -528,7 +545,7 @@ class Pattern(object):
         '''
         if self.name == Pattern.DEFAULT_NAME:
             # case from code: compute pattern's normal format
-            if self.format is None: self.format = self._format()
+            if getattr(self, 'format', None) is None: self.format = self._format()
             return self.format
         return self.name
 
@@ -553,11 +570,11 @@ class Pattern(object):
         ''' standard output string "name:format"
         '''
         # case from code: compute pattern's normal format
-        if self.format is None:
+        if getattr(self, 'format', None) is None:
             self.format = self._format()
         if Pattern.FULL_OUTPUT:
             return "%s:%s" %(self.name,self._fullFormat())
-        return "%s:%s" %(self.name,self.format)
+        return "%s:%s" %(getattr(self, 'name', '??'),getattr(self, 'format', '??'))
 
     def _formatRepr(self):
         ''' representation of pattern creation syntax used by __repr__
@@ -623,6 +640,87 @@ class Word(Pattern):
 
 
 ### combinations #############################
+
+class Regexp(Pattern):
+    '''Multiple Words, optimized'''
+    def __init__(self, choice=None, sequence=None, numMin=1, numMax=False, expression=None, name=None):
+        self._copyargs = (choice, sequence, numMin, numMax, expression, name)
+        if choice:
+            patterns = choice
+            joiner = "|"
+        else:
+            patterns = sequence
+            joiner = ""
+        def getre(p):
+            if isinstance(p,Klass): 
+                charset = p.charset.replace('-', '\\-')
+                return "(?:[%s]|[^\\x00-\\x255])"%(re.escape(charset),)
+            elif isinstance(p,Char): 
+                return "(?:[%s])"%(re.escape(p.char),)
+            elif isinstance(p,Word):
+                return "(?:%s)"%re.escape(p.word)
+            else:
+                raise ValueError("Invalid pattern type")
+        if numMin==0: numMin = False
+        if numMax==0: numMax = False
+        if numMin == numMax and numMin is False:
+            suffix = "*"
+            maxCount = None
+        elif numMin == 1 and numMax == False:
+            suffix = "+"
+            maxCount = None
+        elif numMin == 1 and numMax == 1:
+            suffix = ""
+            maxCount = 1
+        elif numMin == numMax and numMax > 0:
+            suffix = "{%d}"%numMax
+            maxCount = numMax
+        else:
+            suffix = "{%d,%d}"%(numMin,numMax)
+            maxCount = numMax
+        restr = "((?:" + joiner.join( getre(p) for p in patterns ) + ")" + suffix + ")"
+        self._re = re.compile(restr)
+        if maxCount:
+            self.maxLen = max( [len(p.word) for p in patterns if isinstance(p,Word)] or [1] ) * maxCount
+        else:
+            self.maxLen = None
+        self.numMin, self.numMax = numMin, numMax
+        super(Regexp, self).__init__(expression, name)
+
+    @property
+    def patterns(self):
+        return self._copyargs[0]
+
+    def _realCheck(self, source, pos):
+        ''' Check pattern match at position pos in source string.
+            ~ successful if any word is found at pos. '''
+        startPos = pos
+        # case end of text
+        if pos >= len(source):
+            if self.numMin:
+                return EndOfText(self, source, pos)
+            return Node(self, Node.NIL, pos, pos, source)
+        # case success
+        if self.maxLen:
+            match = self._re.match( source[startPos:startPos+self.maxLen] )
+        else:
+            match = self._re.match( source[startPos:] )
+        if match:
+            matchword = match.group(0)
+            matchlen = len(matchword)
+            if matchlen:
+                return Node(self, matchword, startPos, startPos + matchlen, source)
+            elif self.numMin is False :
+                return Node(self, Node.NIL, pos,pos,source)
+        # case failure
+        return MatchFailure(self, source, pos)
+
+    def __deepcopy__(self, memo):
+        args = clone(self._copyargs)
+        ret = Regexp(*args)
+        ret.actions = clone(self.actions)
+        return ret
+
 class Choice(Pattern):
     ''' ordered choice pattern :    "a / b"
         Case repeted pattern is a Klass (or simple Char),
@@ -635,6 +733,12 @@ class Choice(Pattern):
         # Note: cls is Choice
         #
         # case patterns are Char-s or Klass-es
+        if all( (isinstance(p, Word) or isinstance(p,Klass) or isinstance(p,Char)) for p in patterns ) and \
+                allEqual( p.actions for p in patterns ):
+            self = Regexp( choice=patterns, numMin=1, numMax=1, expression=expression, name=name )
+            if patterns[0].actions:
+                self( *patterns[0].actions )
+            return self
         if all( (isinstance(p,Klass) or isinstance(p,Char)) for p in patterns ):
             # compute data
             chars_sets = []
@@ -720,6 +824,34 @@ class Choice(Pattern):
 class Sequence(Pattern):
     ''' ordered sequence pattern :   a b
     '''
+    def __new__(cls, patterns, expression=None, name=None):
+        ''' Yield a Regexp pattern if all patterns are either klasses or chars.
+            Else yield standard Sequence pattern.
+        '''
+        # Note: cls is Sequence
+        #
+        # case patterns are Char-s or Klass-es
+        if all( (isinstance(p, Word) or isinstance(p,Klass) or isinstance(p,Char)) for p in patterns ) and \
+                allEqual( p.actions for p in patterns ):
+            self = Regexp( sequence=patterns, numMin=1, numMax=1, expression=expression, name=name )
+            return self
+        # else a Choice
+        self = super(Sequence, cls).__new__(cls, patterns, expression, name)
+        self._copyargs = (patterns, expression, name)
+        return self
+
+    def __copy__(self):
+        args = clone(self._copyargs)
+        ret = Sequence(*args)
+        ret.__dict__ = clone(self.__dict__)
+        return ret
+
+    def __deepcopy__(self, memo):
+        args = clone(self._copyargs)
+        ret = Sequence(*args)
+        ret.__dict__ = clone(self.__dict__)
+        return ret
+
     def __init__(self, patterns, expression=None, name=None):
         ''' Define name, patterns, memo.'''
         self.patterns = patterns
@@ -1021,6 +1153,10 @@ class Repetition(Pattern):
             self = String(pattern, numMin,numMax, expression,name)
             self._copyargs = (pattern, numMin, numMax, expression, name)
             return self
+        elif isinstance(pattern,Regexp):
+            self = Regexp( choice=pattern.patterns, numMin=numMin, numMax=numMax, expression=expression, name=name)
+            self.actions = clone(pattern.actions)
+            return self
         # else a Repetition
         self = super(Repetition, cls).__new__(cls, pattern, numMin,numMax, expression,name)
         self._copyargs = (pattern, numMin, numMax, expression, name)
@@ -1062,6 +1198,8 @@ class Repetition(Pattern):
         childNumber = 0
         startPos = pos
         numMax = self.numMax
+        #if self.name == "TITLE3_BEGIN" and source[pos] == '=':
+            #import pdb; pdb.set_trace()
         while True:
             # case success: append node to child sequence
             try:

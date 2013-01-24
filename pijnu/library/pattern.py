@@ -1,6 +1,4 @@
 # -*- coding: utf8 -*-
-global foo
-foo = False
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
 Copyright 2011-2012 Peter Potrowl <peter017@gmail.com> (current developer)
@@ -86,6 +84,17 @@ from node import *
 from error import *
 from charset import charset as toCharset
 from time import time   # for stats
+
+import logging
+from logging import getLogger
+
+TRACE = True
+
+logger = getLogger(__name__)
+
+if TRACE:
+    logging.basicConfig(level=logging.DEBUG)
+    logger.setLevel(logging.DEBUG)
 
 import re
 
@@ -176,6 +185,10 @@ class Pattern(object):
     DO_STATS = False
     # unnamed pattern default name
     DEFAULT_NAME = "<?>"
+
+    #debug output?
+    TRACE = False
+    #TRACE = True
 
     def __new__(cls, *args, **kwargs):
         self = object.__new__(cls)
@@ -476,6 +489,7 @@ class Pattern(object):
             ~ Else call _realCheck and memoize result.
         '''
         if Pattern.DO_STATS: Pattern.stats.trials += 1
+        if Pattern.TRACE: logger.debug("_memoCheck: %r @%d"%(self, pos))
 
         # case check result memoized for this position
         if pos in self.memo:
@@ -659,6 +673,8 @@ class Regexp(Pattern):
                 return "(?:[%s])"%(re.escape(p.char),)
             elif isinstance(p,Word):
                 return "(?:%s)"%re.escape(p.word)
+            elif isinstance(p,Regexp):
+                return "(?:%s)"%p._re.pattern
             else:
                 raise ValueError("Invalid pattern type")
         if numMin==0: numMin = False
@@ -684,12 +700,20 @@ class Regexp(Pattern):
             def patternLen(p):
                 if isinstance(p, Klass) or isinstance(p, Char):
                     return 1
+                elif isinstance(p, Regexp):
+                    return p.maxLen
                 else:
                     return len(p.word)
             if joiner == "|":
-                self.maxLen = max( [patternLen(p) for p in patterns] or [1] ) * maxCount
+                try:
+                    self.maxLen = max( [patternLen(p) for p in patterns] or [1] ) * maxCount
+                except TypeError: # if we can't calculate the max length, it's none so that we scan until the end of the string
+                    self.maxLen = None
             else:
-                self.maxLen = sum( [patternLen(p) for p in patterns] ) * maxCount
+                try:
+                    self.maxLen = sum( [patternLen(p) for p in patterns] ) * maxCount
+                except TypeError: # if we can't calculate the max length, it's none so that we scan until the end of the string
+                    self.maxLen = None
         else:
             self.maxLen = None
         self.numMin, self.numMax = numMin, numMax
@@ -741,7 +765,7 @@ class Choice(Pattern):
         # Note: cls is Choice
         #
         # case patterns are Char-s or Klass-es
-        if all( (isinstance(p, Word) or isinstance(p,Klass) or isinstance(p,Char)) for p in patterns ) and \
+        if all( isinstance(p, (Word, Klass, Char, Regexp)) for p in patterns ) and \
                 allEqual( p.actions for p in patterns ):
             self = Regexp( choice=patterns, numMin=1, numMax=1, expression=expression, name=name )
             if patterns[0].actions:
@@ -839,7 +863,7 @@ class Sequence(Pattern):
         # Note: cls is Sequence
         #
         # case patterns are Char-s or Klass-es
-        if all( (isinstance(p, Word) or isinstance(p,Klass) or isinstance(p,Char)) for p in patterns ) and \
+        if all( isinstance(p, (Word, Klass, Char, Regexp)) for p in patterns ) and \
                 allEqual( p.actions for p in patterns ):
             self = Regexp( sequence=patterns, numMin=1, numMax=1, expression=expression, name=name )
             return self
@@ -1160,6 +1184,10 @@ class Repetition(Pattern):
         if isinstance(pattern,Klass):
             self = String(pattern, numMin,numMax, expression,name)
             self._copyargs = (pattern, numMin, numMax, expression, name)
+            return self
+        elif isinstance(pattern,Word):
+            self = Regexp( choice=[pattern], numMin=numMin, numMax=numMax, expression=expression, name=name)
+            self.actions = clone(pattern.actions)
             return self
         elif isinstance(pattern,Regexp):
             self = Regexp( choice=pattern.patterns, numMin=numMin, numMax=numMax, expression=expression, name=name)

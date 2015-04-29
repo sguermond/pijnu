@@ -21,8 +21,7 @@ License along with Pijnu.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 
-from distutils.core import setup
-from datetime import date
+from setuptools import setup
 
 long_description = """\
 'pijnu' is
@@ -34,20 +33,20 @@ long_description = """\
 """
 
 setup(name="pijnu",
-      version="20111221",
+      version="20130124",
       author="Denis Derman",
       author_email="denis.spir@gmail.com",
       maintainer="Peter Potrowl",
-      maintainer_email="peter017@gmail.com",
+      maintainer_email="peter.potrowl@gmail.com",
       url="http://www.github.com/peter17/pijnu",
-      license="GPL3",
+      license="LGPL v3",
       platforms=["Any"],
       packages=["pijnu", "pijnu.generator", "pijnu.library"],
       scripts=[],
       description="text parsing & processing tool",
       long_description=long_description,
       classifiers=[
-          'License :: GPL',
+          'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
           'Development Status :: 4 - Beta',
           'Topic :: Software Development',
           'Topic :: Text Processing',

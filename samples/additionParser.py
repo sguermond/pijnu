@@ -31,6 +31,7 @@ number		: real / integer
 numbers		: number (SEP number)*
 
 """
+from __future__ import print_function
 
 from pijnu import *
 
@@ -49,4 +50,4 @@ addition = Sequence([integer, PLUS, integer])(doAddition)
 additionParser = Parser(vars(), 'addition', 'addition', 'None')
 
 s = "22+333"
-print additionParser.match(s)
+print(additionParser.match(s))

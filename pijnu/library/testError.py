@@ -19,6 +19,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with Pijnu.  If not, see <http://www.gnu.org/licenses/>.
 '''
+from __future__ import print_function
 
 from pijnu.generator import makeParser
 from pijnu.library.pattern import *
@@ -40,8 +41,8 @@ jkl\t mno pqr\tstu vwx yz&"""
         s = source[:pos] + '#' + source[pos:]
         try:
             string.match(s)
-        except PijnuError, e:
-            print e
+        except PijnuError as e:
+            print(e)
 
 
 def testWrap():
@@ -112,13 +113,13 @@ def noX(node):
 
 def test():
     testLocation()
-    print RULER
+    print(RULER)
     testWrap()
-    print RULER
+    print(RULER)
     testEOT()
-    print RULER
+    print(RULER)
     testIncomplete()
-    print RULER
+    print(RULER)
     testInvalid()
 if __name__ == "__main__":
     test()

@@ -23,6 +23,7 @@ License along with Pijnu.  If not, see <http://www.gnu.org/licenses/>.
 '''
 Simple test profiler -- just case needed
 '''
+from __future__ import print_function
 
 from pijnu import makeParser
 
@@ -52,11 +53,11 @@ def profile(command, logFile):
     ruler = 33 * "="
     # run with profiler & timer
     cProfile.run(command, logFile)
-    print ruler
+    print(ruler)
     ps = pstats.Stats(logFile)
 #~  ps.strip_dirs()
     ps.sort_stats("time")
     ps.print_stats(11)
-    print ruler
+    print(ruler)
 
 profile("parseTest()", "testProfileStats")

@@ -28,6 +28,8 @@ Parser generator.
 ~ Can return a parser object.
 ~ Can create a pattern from a format.
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 
 ### import/export
 from pijnu.library.tools import fileText, writeFile
@@ -35,9 +37,9 @@ from pijnu.library.tools import fileText, writeFile
 from pijnu.library.pattern import *
 
 # this is the standard meta parser --> makeParser
-from pijnuParser import pijnuParser
+from .pijnuParser import pijnuParser
 # pattern objects to parse pattern format --> getPattern
-from pijnuParser import pattern, patternDef
+from .pijnuParser import pattern, patternDef
 
 import os, sys
 
@@ -64,19 +66,19 @@ def getPattern(format):
         (name,patternExpression) = patternNode.value.split("=",1)
         (name,patternExpression) = (name.rstrip(),patternExpression.lstrip())
     # case unnamed
-    except PijnuError, e:
+    except PijnuError as e:
         try:
             patternNode = pattern.parse(format)
             patternExpression = patternNode.value
         # else error
-        except PijnuError, e:
+        except PijnuError as e:
             message = "Invalid pattern format:\n   %s" %format
             raise PijnuError(message)
 
     ### yield & return pattern object
-    print "... creating pattern from\n    %s" % format
+    print("... creating pattern from\n    %s" % format)
     patternObject = eval(patternExpression)
-    print "--> %s  %s" % (patternObject.__class__.__name__, patternObject)
+    print("--> %s  %s" % (patternObject.__class__.__name__, patternObject))
     return patternObject
 
 #
@@ -88,7 +90,7 @@ def makeParser(grammarText, feedback=False, outputPath=""):
         parser = makeParser(fileText("foo.pijnu")) '''
     ### parse & process grammar
     #   (using meta-parser 'pijnuParser')
-    print "... parsing grammar ..."
+    print("... parsing grammar ...")
     tree = pijnuParser.parse(grammarText)
 
     ### compose parser code:
@@ -97,7 +99,7 @@ def makeParser(grammarText, feedback=False, outputPath=""):
     #   ~ parser object creation
     #   ~ grammar code itself
     #   ~ parser object specification
-    print "... composing code ..."
+    print("... composing code ...")
     # major code sections
     grammarTitle = tree.title
     definition = tree.definition
@@ -144,11 +146,11 @@ def make_parser(actions=None):
          grammarCode='\n    '.join(tree.value.splitlines())))
 
     ### write parser module --possible feedback on stdout
-    print "... writing file ...\n"
+    print("... writing file ...\n")
     filepath = os.path.join(outputPath, filename)
     writeFile(filepath, code)
     if feedback:
-        print fileText(filepath)
+        print(fileText(filepath))
 
     ### return parser object --if ever needed
     try:
@@ -284,9 +286,9 @@ def excludedCharset(node):
     makeParser(klassesGrammar)
     from klassesParser import klassesParser
     text = r"""[] [abc!'"\]] [a..e] [abcxyz  \097..\101] [\x61..\x65  1..9]"""
-    print klassesParser.findAll(text)
+    print(klassesParser.findAll(text))
     text = r"""[!!] [abc!!] [a!!b!!c] [abc!!b] [a..c  1..9  !'\]"  !!\'b  2..8]"""
-    print klassesParser.findAll(text)
+    print(klassesParser.findAll(text))
 def numbers():
     print ("=== sample: numbers ===")
     numbersGrammar = """\
@@ -307,7 +309,7 @@ numbers     : number (SEP number)*
     makeParser(numbersGrammar)
     from numbersParser import numbersParser
     numbersParser.test("123 4. 5.67")
-    print numbersParser.match("123 4. 5.67")
+    print(numbersParser.match("123 4. 5.67"))
     numbersParser.integer.test("123 456 789", 'findAll')
 
 def numbersTransform():
@@ -358,10 +360,10 @@ formula     : add / mult / digit
     # test
     from formulaParser import formulaParser
     formulaParser.test("9*8+01*2.3+45*67*(89+01.2)")
-    print 9*8+01*2.3+45*67*(89+01.2)
-    print formulaParser.match("9*8+01*2.3+45*67*(89+01.2)")
+    print(9*8+0o1*2.3+45*67*(89+01.2))
+    print(formulaParser.match("9*8+01*2.3+45*67*(89+01.2)"))
     Node.TREE_VIEW=True
-    print formulaParser.match("9*8+01*2.3+45*67*(89+01.2)")
+    print(formulaParser.match("9*8+01*2.3+45*67*(89+01.2)"))
 
 def wikInline():
     print ("=== sample: wikInline ===")

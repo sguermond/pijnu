@@ -75,14 +75,16 @@ Patterns
           They rather transfer result nodes or match failure.
           These are .
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 
 
 ### import/export
-from tools import *
+from .tools import *
 
-from node import *
-from error import *
-from charset import charset as toCharset
+from .node import *
+from .error import *
+from .charset import charset as toCharset
 from time import time   # for stats
 
 import logging
@@ -236,7 +238,7 @@ class Pattern(object):
         # match
         try:
             return self.match(source)
-        except PijnuError, e:
+        except PijnuError as e:
             print (e)
             return None
 
@@ -252,7 +254,7 @@ class Pattern(object):
         result = self._memoCheck(source, 0)
         if Pattern.DO_STATS:
             Pattern.stats.stop_time = time()
-            print Pattern.stats
+            print(Pattern.stats)
 
         # case whole of source text is matched
         pos = result.end
@@ -267,7 +269,7 @@ class Pattern(object):
         '''
         try:
             return self.parse(source)
-        except (MatchFailure,EndOfText,IncompleteParse), e:
+        except (MatchFailure,EndOfText,IncompleteParse) as e:
             print (e)
             return None
 
@@ -395,14 +397,14 @@ class Pattern(object):
             try:
                 assert unicode(r) == result
                 if verbose:
-                    print "%s --> %s" %(source, result)
+                    print("%s --> %s" %(source, result))
                 pass_count += 1
             except AssertionError:
                 error_count += 1
                 print ("*** error ***\n   %s --> %s\n   expected: %s"
                        % (source, unicode(r), result))
         # print summary
-        print "\n*** Test suite: %s passed; %s failed ***" % (pass_count, error_count)
+        print("\n*** Test suite: %s passed; %s failed ***" % (pass_count, error_count))
         return error_count
 
     def testSuiteMultiline(self, sources, results, method_name="parse", verbose=False):
@@ -432,14 +434,14 @@ class Pattern(object):
             try:
                 assert r.treeView() == result
                 if verbose:
-                    print "Source:\n%s\nResult:\n%s" %(source, result)
+                    print("Source:\n%s\nResult:\n%s" %(source, result))
                 pass_count += 1
             except AssertionError:
                 error_count += 1
                 print (    "*** error ***\nSource:\n%s\nResult:\n%s\n\nExpected:\n%s\n"
                         %(source, r.treeView(), result) )
         # print summary
-        print "\n*** Test suite: %s passed; %s failed ***" % (pass_count, error_count)
+        print("\n*** Test suite: %s passed; %s failed ***" % (pass_count, error_count))
         return error_count
 
     def testSuiteDict(self, sources, method_name="parse", multiline = False):
@@ -466,20 +468,20 @@ class Pattern(object):
             sources = []
             results = []
             for (source, result) in d.items():
-                print "source%s = \"\"\"%s\"\"\"" % (i, source)
+                print("source%s = \"\"\"%s\"\"\"" % (i, source))
                 if result is not None:
                     result = result.treeView()
-                print "result%s = \"\"\"%s\"\"\"" % (i, result)
+                print("result%s = \"\"\"%s\"\"\"" % (i, result))
                 sources.append("source%s" % i)
                 results.append("result%s" % i)
                 i += 1
-            print "sources = [", ', '.join(sources), "]"
-            print "results = [", ', '.join(results), "]"
+            print("sources = [", ', '.join(sources), "]")
+            print("results = [", ', '.join(results), "]")
         else:
-            print "test_suite_dict = {"
+            print("test_suite_dict = {")
             for (source, result) in d.items():
-                print "    \"%s\": \"%r\"" % (source, result)
-            print "}"
+                print("    \"%s\": \"%r\"" % (source, result))
+            print("}")
         return d
 
     ### match check
@@ -505,7 +507,7 @@ class Pattern(object):
         if Pattern.DO_STATS: Pattern.stats.checks += 1
         try:
             result = self._realCheck(source, pos)
-        except Invalidation, e:
+        except Invalidation as e:
             result = e
         self.memo[pos] = result
         # case success
@@ -826,7 +828,7 @@ class Choice(Pattern):
                 return node
             # case failure: collect error message used by _message
             # Note: This allows displaing while *each* pattern has failed.
-            except PijnuError, e:
+            except PijnuError as e:
                 e.wrap = True
                 sub_errors.append(e)
         # case overall failure
@@ -905,7 +907,7 @@ class Sequence(Pattern):
                 childNodes.append(node)
             # case failure:
             # record unsuccessful pattern error used by _message
-            except PijnuError, e:
+            except PijnuError as e:
                 e.wrap = True
                 self.sub_error = e
                 return MatchFailure(self, source, pos)
@@ -958,7 +960,7 @@ class Option(Pattern):
                 node.doActions(self.actions)
             return node
         # case failure: return nil node, pos does not move
-        except PijnuError, e:
+        except PijnuError as e:
             return Node(self, Node.NIL, pos,pos,source)
 
     def _message(self):
@@ -995,7 +997,7 @@ class Next(Pattern):
             node = self.pattern._memoCheck(source, pos)
             return Node(self, Node.NIL, pos,pos,source)
         # case failure
-        except PijnuError, e:
+        except PijnuError as e:
             e.wrap = True
             self.sub_error = e
             return MatchFailure(self, source, pos)
@@ -1038,7 +1040,7 @@ class NextNot(Pattern):
             return MatchFailure(self, source, pos)
         # case "failure": success
         # -- return nil node, keep pos unchanged
-        except PijnuError, e:
+        except PijnuError as e:
             return Node(self, Node.NIL, pos,pos,source)
 
     def _message(self):
@@ -1086,7 +1088,7 @@ class ZeroOrMore(Pattern):
                 pos = node.end
                 childNodes.append(node)
             # case failure: stop
-            except PijnuError, e:
+            except PijnuError as e:
                 break
         return Node(self, childNodes, startPos,pos,source)
 
@@ -1123,7 +1125,7 @@ class OneOrMore(Pattern):
             pos = node.end
             childNodes = Nodes(node)
         # case failure
-        except PijnuError, e:
+        except PijnuError as e:
             e.wrap = True
             self.sub_error = e
             return MatchFailure(self, source ,pos)
@@ -1135,7 +1137,7 @@ class OneOrMore(Pattern):
                 pos = node.end
                 childNodes.append(node)
             # case failure: stop
-            except PijnuError, e:
+            except PijnuError as e:
                 break
         return Node(self, childNodes, startPos,pos,source)
 
@@ -1247,7 +1249,7 @@ class Repetition(Pattern):
                 if numMax and childNumber==numMax:
                     break
             # case failure: stop
-            except PijnuError, e:
+            except PijnuError as e:
                 e.wrap=True
                 self.sub_error = e
                 break
@@ -1599,7 +1601,7 @@ class Recursive(Pattern):
         try:
             node = self.pattern._memoCheck(source, pos)
             return node
-        except PijnuError, e:
+        except PijnuError as e:
             e.pattern = self
             return e
 

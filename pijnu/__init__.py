@@ -23,10 +23,11 @@ License along with Pijnu.  If not, see <http://www.gnu.org/licenses/>.
 '''
 Client interface to export useful elements
 '''
+from __future__ import absolute_import
 
 ### import/export
-import library                  # pijnu internal library
-import generator                # parser & pattern generation
+from . import library                  # pijnu internal library
+from . import generator                # parser & pattern generation
 
 # allow user write "from pijnu import makeParser"
-from generator import makeParser, getPattern, fileText
+from .generator import makeParser, getPattern, fileText

@@ -25,10 +25,11 @@ Match errors
 
 Pijnu errors -- with full information output
 '''
+from __future__ import absolute_import
 
 
 ### import/export
-from tools import *
+from .tools import *
 
 __all__ = ["PijnuError", "ErrorLocation",
            "MatchFailure", "EndOfText", "IncompleteParse", "Invalidation"]

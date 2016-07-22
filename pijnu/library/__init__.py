@@ -25,9 +25,10 @@ Pijnu library
 
 Client interface to export useful elements
 '''
+from __future__ import absolute_import
 
 ### import/export
 # pattern imports node & error
-from pattern import *           # pattern types & match checking methods
-from parser import Parser       # Parser type
-from preprocess import *        # builtin preprocessing funcs
+from .pattern import *           # pattern types & match checking methods
+from .parser import Parser       # Parser type
+from .preprocess import *        # builtin preprocessing funcs

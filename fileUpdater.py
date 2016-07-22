@@ -25,6 +25,7 @@ Tool to insert a notice in selected files of recursively walked dirs
 
 See more info in variable 'info' below.
 '''
+from __future__ import print_function
 
 from pijnu.library.tools import fileText, fileNames
 import sys, os
@@ -41,7 +42,7 @@ def changeText(filename, text, newtext=""):
         f = file(filename, 'w')
         f.write(filetext)
         f.close()
-        print "file: %s" % filename
+        print("file: %s" % filename)
 
 
 def changeTexts(text, newtext="", dir=None, ext="py"):
@@ -49,9 +50,9 @@ def changeTexts(text, newtext="", dir=None, ext="py"):
     if dir is None:
         dir = os.getcwd()
     # run
-    print "=== file walk ==="
+    print("=== file walk ===")
     filenames = fileNames(dir, ext)
-    print "\n=== changing files ==="
+    print("\n=== changing files ===")
     for filename in filenames:
         changeText(filename, text, newtext)
 
@@ -68,7 +69,7 @@ def insertNotice(filename, notice, linecount):
     f = file(filename, 'w')
     f.write(text)
     f.close()
-    print "file: %s" % filename
+    print("file: %s" % filename)
 
 
 def insertNotices(notice_filename, linecount=2, dir=None, ext="py"):
@@ -87,9 +88,9 @@ def insertNotices(notice_filename, linecount=2, dir=None, ext="py"):
     if not (answer.lower() == 'y'):
         end()
     # yes, run!
-    print "=== file walk ==="
-    print linecount, dir
+    print("=== file walk ===")
+    print(linecount, dir)
     filenames = fileNames(dir, ext)
-    print "\n=== writing notice ==="
+    print("\n=== writing notice ===")
     for filename in filenames:
         insertNotice(filename, notice, linecount)

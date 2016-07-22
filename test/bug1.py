@@ -3,6 +3,7 @@ Cloning a Choice pattern raises a TypeError exception.
 
 It might also happen with other types of patterns.
 """
+from __future__ import print_function
 
 from pijnu import makeParser
 numbers_transform_grammar = """
@@ -24,4 +25,4 @@ def to_real(node):
 """
 make_parser = makeParser(numbers_transform_grammar)
 parser = make_parser()
-print parser.parseTest('1 2 3')
+print(parser.parseTest('1 2 3'))

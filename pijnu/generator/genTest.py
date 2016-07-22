@@ -24,6 +24,7 @@ License along with Pijnu.  If not, see <http://www.gnu.org/licenses/>.
 
 Uses genTestParser.py, generated from genTest.pijnu
 '''
+from __future__ import print_function
 
 from sys import exit as end
 
@@ -64,13 +65,13 @@ sources = """\
 """.splitlines()
 parser.testSuiteDict(sources)
 
-print parser.digits
-print parser.foo
-print parser.bar
-print parser.baz
-print repr(parser.foo)
-print repr(parser.bar)
-print repr(parser.baz)
-print parser.foo.pattern
-print parser.bar.klass
-print parser.baz.klass
+print(parser.digits)
+print(parser.foo)
+print(parser.bar)
+print(parser.baz)
+print(repr(parser.foo))
+print(repr(parser.bar))
+print(repr(parser.baz))
+print(parser.foo.pattern)
+print(parser.bar.klass)
+print(parser.baz.klass)

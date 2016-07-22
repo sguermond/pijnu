@@ -26,6 +26,7 @@ Pijnu parser match actions
 A set of match actions to change node values.
 Used by pijnu's meta parser to write user parser code.
 '''
+from __future__ import print_function
 
 
 ### import/export
@@ -338,7 +339,7 @@ def patternDefCode(node):
 	### set node value
 	# special case of cloned pattern
 	if pattern.isName:
-		print "name pattern format", format
+		print("name pattern format", format)
 		node.value = 	"%s %s Clone(%s, expression='%s', name='%s')%s" \
 						% (name, BIND, format, format,name, transform)
 	# ordinary case

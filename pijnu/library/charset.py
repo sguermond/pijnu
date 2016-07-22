@@ -79,6 +79,7 @@ char klass expression in python code:
         In this case, you can pass both the expression and the charset:
         Klass(expression, charset)
 '''
+from __future__ import print_function
 
 
 # import export
@@ -147,7 +148,7 @@ def production(expression):
         # expand character ranges
         expanded_charseq = expandedSeq(charseq)
         # glue the seq into a string
-    except Exception, error_text:
+    except Exception as error_text:
         message = "Invalid charset expression:"
         cause = "%s\n   %s\n%s" % (message, expression, error_text)
         raise ValueError(cause)
@@ -206,13 +207,13 @@ RULER = 33 * '='
 
 
 def trial(expression):
-    print RULER
+    print(RULER)
     print ("expression str:\n'%s'\nexpression repr:\n%s\n"
         % (expression, repr(expression)))
     charstring = charset(expression)
     print ("charset str:\n'%s'\ncharset repr:\n%s"
         % (charstring, repr(charstring)))
-    print RULER
+    print(RULER)
 
 
 def test():  # causes error at the end

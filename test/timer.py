@@ -23,6 +23,7 @@ License along with Pijnu.  If not, see <http://www.gnu.org/licenses/>.
 '''
 Overall timer func -- just case needed
 '''
+from __future__ import print_function
 
 from time import time
 
@@ -36,8 +37,8 @@ def timer(n, f, *args, **kw_args):
     t = time() - t0
     arg_str = ','.join(repr(arg) for arg in args)
     kw_arg_str = (',' + str(kw_args)[1:-1]) if kw_args else ''
-    print     "%s(%s%s) %s time(s) <--> %0.3f s" \
-            % (f.__name__, arg_str, kw_arg_str, n, t)
+    print("%s(%s%s) %s time(s) <--> %0.3f s" \
+            % (f.__name__, arg_str, kw_arg_str, n, t))
 
 
 ########## test ##########

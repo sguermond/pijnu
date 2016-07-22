@@ -24,9 +24,11 @@ License along with Pijnu.  If not, see <http://www.gnu.org/licenses/>.
 Pattern testing
 (in separate module to avoid parser circular import).
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 
-from parser import Parser   # for testing
-from pattern import *
+from .parser import Parser   # for testing
+from .pattern import *
 
 
 ### test #####################################
@@ -77,7 +79,7 @@ def testPossib():
     nextNot = NextNot(word)
     parser = Parser(vars())
     text1, text2 = "abcX", "Xabc"
-    print "wrapped pattern:   %s" %word
+    print("wrapped pattern:   %s" %word)
     # successful match
     print ("=== success")
     option.test(text1)
@@ -104,7 +106,7 @@ def testRepete():
     repete2Plus = Repetition(word, 2, False)
     parser = Parser(vars())
     textNil, text0, text1, text3 = "", "X", "zzzX", "zzzzzzzzzX"
-    print "wrapped pattern:   %s" %word
+    print("wrapped pattern:   %s" %word)
     # matches
     print ("=== matches for several length")
     zeroOrMore.test(text3)
@@ -145,7 +147,7 @@ def testChars():
     aaa.test('aaaz')
     # klass matches
     print ("=== klass matches")
-    print "pattern   %s" % klass
+    print("pattern   %s" % klass)
     for source in ("a", "q", "A", "B", "1", "0", "*", "\\", "]", "[", "&", ""):
         try:
             result = klass.match(source)
@@ -153,21 +155,21 @@ def testChars():
             result = "<EndOfText>"
         except MatchFailure:
             result = "<MatchFailure>"
-        print "   %5s --> %s" % (repr(source), result)
+        print("   %5s --> %s" % (repr(source), result))
     # string expression
     print ("=== numbered string format expression")
     k = Klass('z')
-    print "False, False -->", String(k, False, False)._format()
-    print "0, False -->", String(k, 0, False)._format()
-    print "False, 0 -->", String(k, False, 0)._format()
-    print "0, 0 -->", String(k, 0, 0)._format()
-    print "1, False -->", String(k, 1, False)._format()
-    print "1, 0 -->", String(k, 1, False)._format()
-    print "3, False -->", String(k, 3, False)._format()
-    print "3, 0 -->", String(k, 3, False)._format()
-    print "3, 3 -->", String(k, 3, 3)._format()
-    print "3, 7 -->", String(k, 3, 7)._format()
-    print "0, 7 -->", String(k, 0, 7)._format()
+    print("False, False -->", String(k, False, False)._format())
+    print("0, False -->", String(k, 0, False)._format())
+    print("False, 0 -->", String(k, False, 0)._format())
+    print("0, 0 -->", String(k, 0, 0)._format())
+    print("1, False -->", String(k, 1, False)._format())
+    print("1, 0 -->", String(k, 1, False)._format())
+    print("3, False -->", String(k, 3, False)._format())
+    print("3, 0 -->", String(k, 3, False)._format())
+    print("3, 3 -->", String(k, 3, 3)._format())
+    print("3, 7 -->", String(k, 3, 7)._format())
+    print("0, 7 -->", String(k, 0, 7)._format())
     # string matches
     print ("=== string matches")
     String(klassN, 0, 0).test("abc#")
@@ -243,25 +245,25 @@ def testRecursion():
 
 def testFindReplace():
     text = "qoi2156g564grf88ze"
-    print "\n=== findAll [0..9]+ in\n   %s\n" % text
+    print("\n=== findAll [0..9]+ in\n   %s\n" % text)
     num = String(Klass("0..9"))
     num.name = "num"
-    print num.findAll(text)
-    print "\n=== replace [0..9]+ with '#' in\n   %s\n" % text
-    print num.replace(text, "#")
+    print(num.findAll(text))
+    print("\n=== replace [0..9]+ with '#' in\n   %s\n" % text)
+    print(num.replace(text, "#"))
 
 
 def test():
     testCombine()
-    print RULER
+    print(RULER)
     testPossib()
-    print RULER
+    print(RULER)
     testRepete()
-    print RULER
+    print(RULER)
     testChars()
-    print RULER
+    print(RULER)
     testRecursion()
-    print RULER
+    print(RULER)
     testFindReplace()
     pass
 

@@ -95,10 +95,12 @@ Node type
     ~ integer:  convert value to int
     ~ real:     convert value to float
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 
 
 ### import/export
-from tools import *
+from .tools import *
 __transforms__ = [
         "debugOutput",
         "liftValue", "liftNode", "extract", "toLeaves", "intoList",
@@ -327,7 +329,7 @@ def debugOutput(node):
     ROW = 33 * '?'
     saveConfig = (Node.TREE_VIEW, Node.WHOLE_INFO)
     (Node.TREE_VIEW, Node.WHOLE_INFO) = (True, True)
-    print "%s\n%s\n%s" % (ROW, node, ROW)
+    print("%s\n%s\n%s" % (ROW, node, ROW))
     (Node.TREE_VIEW, Node.WHOLE_INFO) = saveConfig
 
 
@@ -506,7 +508,7 @@ def intoList(node):
         items.append(node[i])
     # new node value
     node.value = items
-    print "intoList:", node
+    print("intoList:", node)
 
 
 ### value
@@ -621,9 +623,9 @@ def collectValues(node):
         (*) Note that item access in node is magically directed to its value
         through overloading of __getitem___ (and __delitem__ and __len__).
     '''
-    print "* collectValues:", node,
+    print("* collectValues:", node, end=' ')
     node.value = tuple(child.value for child in node)
-    print "-->", node
+    print("-->", node)
 
 
 ################## test ####################
@@ -666,42 +668,42 @@ def testBranch():
     mult = comp.node(Nodes(du, star, tri), 3, 8, text)
     add = comp.node(Nodes(un, plus, mult), 0, 8, text)
     # output
-    print """'mult' is parse result from "0b*0c" (hex)"""
-    print """'add'  is parse result from "0a+0b*0c" """
-    print "=== base output:"
-    print "-mult-\n", mult
-    print "-add-\n", add
-    print "=== tree view:"
+    print("""'mult' is parse result from "0b*0c" (hex)""")
+    print("""'add'  is parse result from "0a+0b*0c" """)
+    print("=== base output:")
+    print("-mult-\n", mult)
+    print("-add-\n", add)
+    print("=== tree view:")
     Node.TREE_VIEW = True
-    print "-mult-\n", mult
-    print "-add-\n", add
-    print "=== whole info:"
+    print("-mult-\n", mult)
+    print("-add-\n", add)
+    print("=== whole info:")
     Node.WHOLE_INFO = True
     Node.TREE_VIEW = False
-    print "-mult-\n", mult
-    print "-add-\n", add
-    print "=== whole tree view:"
+    print("-mult-\n", mult)
+    print("-add-\n", add)
+    print("=== whole tree view:")
     Node.TREE_VIEW = True
-    print "-mult-\n", mult
-    print "-add-\n", add
+    print("-mult-\n", mult)
+    print("-add-\n", add)
     # after value computation
-    print "\n*** (value computed) ***"
+    print("\n*** (value computed) ***")
     mult.value, add.value = 131, 141
     mult.kind, add.kind = Node.LEAF, Node.LEAF
-    print "=== whole info:"
+    print("=== whole info:")
     Node.WHOLE_INFO = True
     Node.TREE_VIEW = False
-    print "-mult-\n", mult
-    print "-add-\n", add
-    print "=== whole tree view:"
+    print("-mult-\n", mult)
+    print("-add-\n", add)
+    print("=== whole tree view:")
     Node.TREE_VIEW = True
-    print "-mult-\n", mult
-    print "-add-\n", add
+    print("-mult-\n", mult)
+    print("-add-\n", add)
 
 
 def testAction():
     print ("=== action ===")
-    print "      (join only)"
+    print("      (join only)")
     text = "0a+0b*0c"
     # patterns
     op = Pat("op")
@@ -719,15 +721,15 @@ def testAction():
     # output
     Node.WHOLE_INFO = True
     Node.TREE_VIEW = False
-    print "-mult-\n", mult
-    print "-add-\n", add
+    print("-mult-\n", mult)
+    print("-add-\n", add)
 
 
 def test():
     testLeaf()
-    print RULER
+    print(RULER)
     testBranch()
-    print RULER
+    print(RULER)
     testAction()
 
 

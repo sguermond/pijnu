@@ -45,10 +45,12 @@ Here is just a set of useful functions:
 You can write your own custom transformations as needed:
 include them in the <toolset> section of the grammar.
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 
 # import export
-from tools import *
-from pattern import *
+from .tools import *
+from .pattern import *
 __all__ = ["NormalizeSeps",
            "WrapIndentedStructure",
            "IndentWrappedStructure"]
@@ -184,9 +186,9 @@ def IndentWrappedStructure(source, INDENT='    ', open="{", close="}"):
 def testNormalize():
     source = "x x   x\tx\t\t\tx"
     format = "[ \t]+"
-    print "\n=== normalize [ \\t]+ to '_' in source:\n   %s\n" \
-            % repr(source)
-    print NormalizeSeps(source, format, "_")
+    print("\n=== normalize [ \\t]+ to '_' in source:\n   %s\n" \
+            % repr(source))
+    print(NormalizeSeps(source, format, "_"))
 
 
 def testWrapIndent():
@@ -200,12 +202,12 @@ def testWrapIndent():
   1
 0
 """
-    print "\n=== wrap indented blocks (erroneous case) in source:\n%s\n"\
-            % (source)
+    print("\n=== wrap indented blocks (erroneous case) in source:\n%s\n"\
+            % (source))
     try:
-        print WrapIndentedStructure(source, INDENT=None, keepIndent=True)
-    except ValueError, e:
-        print e
+        print(WrapIndentedStructure(source, INDENT=None, keepIndent=True))
+    except ValueError as e:
+        print(e)
     # correct example
     source = """\
 0
@@ -226,17 +228,17 @@ def testWrapIndent():
 0
 0
 """
-    print "\n=== wrap indented blocks (keeping indent) in source:\n%s\n"\
-            % (source)
+    print("\n=== wrap indented blocks (keeping indent) in source:\n%s\n"\
+            % (source))
     result = WrapIndentedStructure(source, keepIndent=True)
-    print result
-    print "\n=== reindent same source"
-    print IndentWrappedStructure(result)
+    print(result)
+    print("\n=== reindent same source")
+    print(IndentWrappedStructure(result))
 
 
 def test():
     testNormalize()
-    print RULER
+    print(RULER)
     testWrapIndent()
 
 if __name__ == "__main__":

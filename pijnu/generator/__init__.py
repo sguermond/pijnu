@@ -25,6 +25,7 @@ Pijnu generator
 
 Client interface to export useful names
 '''
+from __future__ import absolute_import
 
 ### import/export
-from generator import makeParser, getPattern, fileText
+from .generator import makeParser, getPattern, fileText

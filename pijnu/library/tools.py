@@ -23,6 +23,7 @@ License along with Pijnu.  If not, see <http://www.gnu.org/licenses/>.
 '''
 Overall Python toolset
 '''
+from __future__ import print_function
 
 ### import export
 import sys

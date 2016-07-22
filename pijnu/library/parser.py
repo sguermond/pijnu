@@ -34,12 +34,14 @@ Provides:
   ~ resetMemo: for reusing patterns while testing
   ~ state
 '''
+from __future__ import print_function
+from __future__ import absolute_import
 
 ### import/export
-from tools import *
+from .tools import *
 # needed to tests
-from pattern import *
-from error import PijnuError
+from .pattern import *
+from .error import PijnuError
 
 
 class State(object):
@@ -295,8 +297,8 @@ def testCode():
     w2 = Word("bar")
     ch = Choice([w1, w2])
     parser = Parser(vars(), "ch", "test")
-    print "parser       :", parser
-    print "top pattern  :", parser.topPattern
+    print("parser       :", parser)
+    print("top pattern  :", parser.topPattern)
     parser.test("foobaz")
 
 
@@ -311,8 +313,8 @@ testParser
 """
     make_parser = makeParser(grammar)
     parser = make_parser()
-    print "parser       :", parser
-    print "top pattern  :", parser.topPattern
+    print("parser       :", parser)
+    print("top pattern  :", parser.topPattern)
     parser.test("barfoz")
 
 
@@ -326,8 +328,8 @@ def testRecursion():
     r **= Choice([parenY, l])
     # parser
     parser = Parser(vars(), "r", "test")
-    print "parser       :", parser
-    print "top pattern  :", parser.topPattern
+    print("parser       :", parser)
+    print("top pattern  :", parser.topPattern)
     parser.test("(((a)))")
 
 

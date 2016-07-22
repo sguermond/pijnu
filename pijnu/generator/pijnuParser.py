@@ -242,9 +242,10 @@ def klassCode(node):
 
 
 """
+from __future__ import absolute_import
 
 from pijnu.library import *
-from pijnuActions import *
+from .pijnuActions import *
 # pijnu meta grammar
 # title: grammar
 group = Recursive()

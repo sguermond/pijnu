@@ -1375,7 +1375,8 @@ class Klass(Pattern):
         ''' error message in case of failure '''
         return "Cannot find any char member of class %s." % self
     # tool func for clean text output
-    control_chars = set( chr(n) for n in (range(0, 32) + range(127, 160)) )
+    control_chars = set( chr(n) for n in range(0, 32))
+    control_chars.update(chr(n) for n in range(127, 160))
     control_char_map = dict( (c, repr(c)[1:-1]) for c in control_chars )
 
     @staticmethod

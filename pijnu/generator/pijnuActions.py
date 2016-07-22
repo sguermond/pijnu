@@ -419,7 +419,7 @@ def preprocessCode(node):
 		node.value = "%s\n\n" % preprocessLines
 
 def definitionCode(node):
- 	''' Transform definition node into definition code
+	''' Transform definition node into definition code
 		& define top pattern. '''
 	# Definition lines can be:
 	# ~ pattern def
@@ -448,7 +448,7 @@ def definitionCode(node):
 	node.value = '\n'.join(defLines)
 
 def headerCode(node):
- 	''' Transform header node into headr code.
+	''' Transform header node into headr code.
 		~ Just a syntactic trick using "if True:"
 		  to build an indented block. '''
 	# example: 	<definition>

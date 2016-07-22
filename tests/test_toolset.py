@@ -26,7 +26,7 @@ def to_real(node):
         parser = make_parser()
         source = "1 3.141592 5"
         result = "[integer:'1.0'  real:'3.141592'  integer:'5.0']"
-        self.assertEquals(unicode(parser.parseTest(source).value), result)
+        self.assertEquals(py3compat.text_type(parser.parseTest(source).value), result)
 
     def test_external_toolset(self):
         """Make sure we can pass a custom toolset from the make_parser call."""
@@ -49,4 +49,4 @@ test_external_toolset_numbers_transform
         parser = make_parser({'to_real': to_real})
         source = "1 3.141592 5"
         result = "[integer:'1.0'  real:'3.141592'  integer:'5.0']"
-        self.assertEquals(unicode(parser.parseTest(source).value), result)
+        self.assertEquals(py3compat.text_type(parser.parseTest(source).value), result)

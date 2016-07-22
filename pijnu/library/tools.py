@@ -26,6 +26,7 @@ Overall Python toolset
 '''
 
 ### import export
+from pijnu import py3compat
 import sys
 from sys import exit as end
 from copy import copy, deepcopy as clone

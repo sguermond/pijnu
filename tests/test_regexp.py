@@ -1,5 +1,6 @@
 from tests import ParserTestCase
 from pijnu import makeParser
+from pijnu import py3compat
 
 class RegexpTest(ParserTestCase):
     """Tests for custom transformation functions"""
@@ -23,7 +24,7 @@ def to_int(node):
         parser = make_parser()
         source = "12 3 5"
         result = "[number:'12'  number:'3'  number:'5']"
-        self.assertEquals(unicode(parser.parseTest(source).value), result)
+        self.assertEquals(py3compat.text_type(parser.parseTest(source).value), result)
 
     def test_choice_regex2(self):
         """Make sure the Choice-optimize-as-Regexp works"""
@@ -44,4 +45,4 @@ def to_int(node):
         parser = make_parser()
         source = "129 3 5"
         result = "[number:'129'  number:'3'  number:'5']"
-        self.assertEquals(unicode(parser.parseTest(source).value), result)
+        self.assertEquals(py3compat.text_type(parser.parseTest(source).value), result)

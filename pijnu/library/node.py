@@ -100,6 +100,7 @@ Node type
 
 
 ### import/export
+from pijnu import py3compat
 from .tools import *
 __transforms__ = [
         "debugOutput",
@@ -363,7 +364,7 @@ def liftValue(node):
         return
     if len(node) != 1:
         return
-    if isinstance(node[0], unicode) or isinstance(node[0], str):
+    if isinstance(node[0], py3compat.string_types):
         node = node[0]
         return
     node.value = node[0].value
@@ -581,8 +582,8 @@ def join(node):
     toLeaves(node)
     childTexts = []
     for child in node.value:
-        if isinstance(child.value, unicode):
-            childTexts.append(unicode(child.value))
+        if isinstance(child.value, py3compat.text_type):
+            childTexts.append(py3compat.text_type(child.value))
         else:
             childTexts.append(str(child.value))
     node.value = ''.join(childTexts)

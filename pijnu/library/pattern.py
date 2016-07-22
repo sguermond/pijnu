@@ -80,6 +80,7 @@ Patterns
 
 
 ### import/export
+from pijnu import py3compat
 from .tools import *
 
 from .node import *
@@ -395,14 +396,14 @@ class Pattern(object):
             except PijnuError:
                 r = None
             try:
-                assert unicode(r) == result
+                assert py3compat.text_type(r) == result
                 if verbose:
                     print("%s --> %s" %(source, result))
                 pass_count += 1
             except AssertionError:
                 error_count += 1
                 print ("*** error ***\n   %s --> %s\n   expected: %s"
-                       % (source, unicode(r), result))
+                       % (source, py3compat.text_type(r), result))
         # print summary
         print("\n*** Test suite: %s passed; %s failed ***" % (pass_count, error_count))
         return error_count

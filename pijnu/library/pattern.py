@@ -1,4 +1,6 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
 Copyright 2011-2012 Peter Potrowl <peter017@gmail.com> (current developer)
@@ -75,8 +77,6 @@ Patterns
           They rather transfer result nodes or match failure.
           These are .
 '''
-from __future__ import print_function
-from __future__ import absolute_import
 
 
 ### import/export

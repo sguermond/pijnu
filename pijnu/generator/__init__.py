@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+from __future__ import absolute_import
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -25,7 +26,6 @@ Pijnu generator
 
 Client interface to export useful names
 '''
-from __future__ import absolute_import
 
 ### import/export
 from .generator import makeParser, getPattern, fileText

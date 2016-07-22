@@ -1,7 +1,7 @@
+from __future__ import print_function
 """
 Calling a repetition inside another produces an infinite loop.
 """
-from __future__ import print_function
 
 from pijnu import makeParser
 numbers_transform_grammar = """

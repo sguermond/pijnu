@@ -1,4 +1,6 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -24,8 +26,6 @@ License along with Pijnu.  If not, see <http://www.gnu.org/licenses/>.
 Pattern testing
 (in separate module to avoid parser circular import).
 '''
-from __future__ import print_function
-from __future__ import absolute_import
 
 from .parser import Parser   # for testing
 from .pattern import *

@@ -1,9 +1,9 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
 
 """
 Some characters (such as `©`) are not allowed in comments.
 """
-from __future__ import print_function
 
 from pijnu import makeParser
 grammar = file("bug3.pijnu").read()

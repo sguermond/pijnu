@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+from __future__ import absolute_import
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -25,7 +26,6 @@ Pijnu library
 
 Client interface to export useful elements
 '''
-from __future__ import absolute_import
 
 ### import/export
 # pattern imports node & error

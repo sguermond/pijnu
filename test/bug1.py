@@ -1,9 +1,9 @@
+from __future__ import print_function
 """
 Cloning a Choice pattern raises a TypeError exception.
 
 It might also happen with other types of patterns.
 """
-from __future__ import print_function
 
 from pijnu import makeParser
 numbers_transform_grammar = """

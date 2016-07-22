@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -19,7 +20,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with Pijnu.  If not, see <http://www.gnu.org/licenses/>.
 '''
-from __future__ import print_function
 
 from pijnu.generator import makeParser
 from pijnu.library.pattern import *

@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -23,7 +24,6 @@ License along with Pijnu.  If not, see <http://www.gnu.org/licenses/>.
 '''
 Simple test profiler -- just case needed
 '''
-from __future__ import print_function
 
 from pijnu import makeParser
 

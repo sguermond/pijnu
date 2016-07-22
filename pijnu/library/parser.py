@@ -1,4 +1,6 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -34,8 +36,6 @@ Provides:
   ~ resetMemo: for reusing patterns while testing
   ~ state
 '''
-from __future__ import print_function
-from __future__ import absolute_import
 
 ### import/export
 from .tools import *

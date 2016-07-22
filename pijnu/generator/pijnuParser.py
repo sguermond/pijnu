@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+from __future__ import absolute_import
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -242,7 +243,6 @@ def klassCode(node):
 
 
 """
-from __future__ import absolute_import
 
 from pijnu.library import *
 from .pijnuActions import *

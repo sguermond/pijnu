@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -25,7 +26,6 @@ Tool to insert a notice in selected files of recursively walked dirs
 
 See more info in variable 'info' below.
 '''
-from __future__ import print_function
 
 from pijnu.library.tools import fileText, fileNames
 import sys, os

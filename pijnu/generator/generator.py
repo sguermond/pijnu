@@ -1,4 +1,6 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -28,8 +30,6 @@ Parser generator.
 ~ Can return a parser object.
 ~ Can create a pattern from a format.
 '''
-from __future__ import print_function
-from __future__ import absolute_import
 
 ### import/export
 from pijnu.library.tools import fileText, writeFile

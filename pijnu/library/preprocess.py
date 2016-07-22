@@ -1,4 +1,6 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -45,8 +47,6 @@ Here is just a set of useful functions:
 You can write your own custom transformations as needed:
 include them in the <toolset> section of the grammar.
 '''
-from __future__ import print_function
-from __future__ import absolute_import
 
 # import export
 from .tools import *

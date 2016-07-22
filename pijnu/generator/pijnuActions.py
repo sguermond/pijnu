@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -26,7 +27,6 @@ Pijnu parser match actions
 A set of match actions to change node values.
 Used by pijnu's meta parser to write user parser code.
 '''
-from __future__ import print_function
 
 
 ### import/export

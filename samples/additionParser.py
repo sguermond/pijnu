@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -31,7 +32,6 @@ number		: real / integer
 numbers		: number (SEP number)*
 
 """
-from __future__ import print_function
 
 from pijnu import *
 

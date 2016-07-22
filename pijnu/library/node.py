@@ -1,4 +1,6 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -95,8 +97,6 @@ Node type
     ~ integer:  convert value to int
     ~ real:     convert value to float
 '''
-from __future__ import print_function
-from __future__ import absolute_import
 
 
 ### import/export

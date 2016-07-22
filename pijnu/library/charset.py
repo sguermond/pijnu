@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+from __future__ import print_function
 
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
@@ -79,7 +80,6 @@ char klass expression in python code:
         In this case, you can pass both the expression and the charset:
         Klass(expression, charset)
 '''
-from __future__ import print_function
 
 
 # import export

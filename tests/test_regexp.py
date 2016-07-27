@@ -1,6 +1,7 @@
 from tests import ParserTestCase
 from pijnu import makeParser
-from pijnu import py3compat
+
+import py3compat
 
 class RegexpTest(ParserTestCase):
     """Tests for custom transformation functions"""

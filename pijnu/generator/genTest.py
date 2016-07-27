@@ -30,7 +30,7 @@ from sys import exit as end
 
 # get parser
 from pijnu.generator import makeParser
-grammar = file("genTest.pijnu").read()
+grammar = open("genTest.pijnu").read()
 
 #~ grammar = """
 #~ genTest

@@ -26,8 +26,9 @@ Overall Python toolset
 '''
 
 ### import export
-from pijnu import py3compat
+import py3compat
 import sys
+
 from sys import exit as end
 from copy import copy, deepcopy as clone
 
@@ -150,9 +151,9 @@ class Seq(list):
     def __repr__(self):
         itemText = "  ".join(repr(item) for item in self)
         return "[%s]" % itemText
-    
+
     def __unicode__(self):
-        itemText = u"  ".join(unicode(item) for item in self)
+        itemText = u"  ".join(py3compat.text_type(item) for item in self)
         return "[%s]" % itemText
 
     def __str__(self):
@@ -284,7 +285,7 @@ class OrDict(dict):
 def fileText(filename):
     ''' file text
         -- with file object safely closed & filesystem file unlocked '''
-    f = file(filename)
+    f = open(filename)
     text = f.read()
     f.close()
     return text
@@ -293,6 +294,6 @@ def fileText(filename):
 def writeFile(filename, text):
     ''' Write -- or overwrite -- text into file.
         --  No error if file exists '''
-    f = file(filename, 'w')
+    f = open(filename, 'w')
     f.write(text)
     f.close()

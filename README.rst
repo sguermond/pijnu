@@ -1,3 +1,7 @@
+.. image:: https://travis-ci.org/peter17/pijnu.svg?branch=master
+   :alt: Build Status
+   :target: https://travis-ci.org/peter17/pijnu
+
 You should probably use the https://github.com/peter17/pijnu official repository...
 
 Pijnu is a PEG parser generator and processor, written in Python, intended to be clear, easy, practical.

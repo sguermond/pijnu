@@ -44,7 +44,7 @@ def do():
     ''' write parser from grammar '''
     # get source grammar from command line argument
     try:
-        grammar = file(arguments[1], 'r').read()
+        grammar = open(arguments[1], 'r').read()
     except IndexError:
         message = ("\nCall Format:\n"
                    "\tpython gen.py grammar_file_name\n"
@@ -55,7 +55,7 @@ def do():
         end()
     # write parser into target file
     try:
-        parserFile = file(arguments[2], 'w')
+        parserFile = open(arguments[2], 'w')
         makeParser(grammar, parserFile)
     except Exception:
         makeParser(grammar)

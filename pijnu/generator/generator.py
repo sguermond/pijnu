@@ -2,6 +2,8 @@
 from __future__ import print_function
 from __future__ import absolute_import
 
+import importlib
+
 '''
 Copyright 2009 Denis Derman <denis.spir@gmail.com> (former developer)
 Copyright 2011-2012 Peter Potrowl <peter017@gmail.com> (current developer)
@@ -108,7 +110,10 @@ def makeParser(grammarText, feedback=False, outputPath=""):
     topPatternName = tree.topPatternName
     filename = "%s.py" % parserName
 
-    code = ('''%(definitionCopy)s
+    code = ('''# -*- coding: utf8 -*-
+
+%(definitionCopy)s
+
 from pijnu.library import *
 
 
@@ -156,8 +161,11 @@ def make_parser(actions=None):
     try:
         if outputPath:
             sys.path.insert(0, outputPath)
+        else:
+            sys.path.insert(0, os.getcwd())
+        print(sys.path)
         modulename = filename[:-3]
-        module = __import__(modulename)
+        module = importlib.import_module(modulename)
     finally:
         sys.path.pop(0)
     return module.make_parser

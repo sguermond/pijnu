@@ -1,6 +1,7 @@
 from tests import ParserTestCase
 from pijnu import makeParser
 
+import py3compat
 
 class ToolsetTests(ParserTestCase):
     """Tests for custom transformation functions"""

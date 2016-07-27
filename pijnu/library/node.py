@@ -100,8 +100,10 @@ Node type
 
 
 ### import/export
-from pijnu import py3compat
+import py3compat
+
 from .tools import *
+
 __transforms__ = [
         "debugOutput",
         "liftValue", "liftNode", "extract", "toLeaves", "intoList",
@@ -157,9 +159,9 @@ class Node(object):
     NIL = Nil()
     # enumeration for node 'kind' attribute
     (LEAF, BRANCH) = (1, 2)
-    __slots__ = ['tag', 'value', 'pattern', 'form', 'source', 'start', 'end', 
+    __slots__ = ['tag', 'value', 'pattern', 'form', 'source', 'start', 'end',
                 'kind', 'snippet', 'id', 'title', 'isRecursive', 'isName', 'format', 'transform',
-                'name', 'topPatternName', 'definition'] 
+                'name', 'topPatternName', 'definition']
     ### creation, value, action
     def __init__(self, pattern, value, start, end, source):
         ''' Define pattern, tag, value, kind, range.
@@ -250,8 +252,11 @@ class Node(object):
             message = "Node %s\nis a leaf node without child nodes." % self
             raise TypeError(message)
 
+    # This method will never be called in Python3
     def __unicode__(self):
-        if isinstance(self.value, Nodes):
+        if isinstance(self.value, str):
+            return "%s:%s" % (self.tag, repr(self.value))
+        elif isinstance(self.value, Nodes):
             return "%s:%s" % (self.tag, unicode(self.value))
         return "%s:'%s'" % (self.tag, unicode(self.value))
 
@@ -265,7 +270,9 @@ class Node(object):
     def __repr__(self):
         ''' output format "type:value"
         '''
-        return "%s:%s" % (self.tag, repr(self.value))
+        if isinstance(self.value, Nodes) or isinstance(self.value, py3compat.string_types):
+            return "%s:%s" % (self.tag, repr(self.value))
+        return "%s:'%s'" % (self.tag, repr(self.value))
 
     def __str__(self):
         ''' output format "type:value", or whole information, or treeView(),
@@ -364,7 +371,7 @@ def liftValue(node):
         return
     if len(node) != 1:
         return
-    if isinstance(node[0], py3compat.string_types):
+    if isinstance(node[0], py3compat.string_types) or isinstance(node[0], str):
         node = node[0]
         return
     node.value = node[0].value

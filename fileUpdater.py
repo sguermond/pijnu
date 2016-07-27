@@ -39,7 +39,7 @@ def changeText(filename, text, newtext=""):
     filetext = fileText(filename)
     if text in filetext:
         filetext = filetext.replace(text, newtext)
-        f = file(filename, 'w')
+        f = open(filename, 'w')
         f.write(filetext)
         f.close()
         print("file: %s" % filename)
@@ -62,11 +62,11 @@ def insertNotice(filename, notice, linecount):
     ''' Insert notice in this file. '''
     notice_lines = ["%s\n" % l for l in notice.splitlines()]
     # compose new text version
-    filelines = file(filename).readlines()
+    filelines = open(filename).readlines()
     textlines = filelines[0:linecount] + notice_lines + filelines[linecount:]
     text = "".join(textlines)
     # write it back
-    f = file(filename, 'w')
+    f = open(filename, 'w')
     f.write(text)
     f.close()
     print("file: %s" % filename)

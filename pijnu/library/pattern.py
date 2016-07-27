@@ -80,7 +80,8 @@ Patterns
 
 
 ### import/export
-from pijnu import py3compat
+import py3compat
+
 from .tools import *
 
 from .node import *
@@ -562,7 +563,8 @@ class Pattern(object):
         '''
         if self.name == Pattern.DEFAULT_NAME:
             # case from code: compute pattern's normal format
-            if getattr(self, 'format', None) is None: self.format = self._format()
+            if getattr(self, 'format', None) is None:
+                self.format = self._format()
             return self.format
         return self.name
 
@@ -580,7 +582,8 @@ class Pattern(object):
             ~ used when config FULL_OUTPUT is on
             * actually defined on each *wrapping* pattern type
         '''
-        if self.format is None: self.format = self._format()
+        if self.format is None:
+            self.format = self._format()
         return self.format
 
     def __str__(self):
@@ -669,10 +672,10 @@ class Regexp(Pattern):
             patterns = sequence
             joiner = ""
         def getre(p):
-            if isinstance(p,Klass): 
+            if isinstance(p,Klass):
                 charset = p.charset.replace('-', '\\-')
                 return "(?:[%s]|[^\\x00-\\xff])"%(re.escape(charset),)
-            elif isinstance(p,Char): 
+            elif isinstance(p,Char):
                 return "(?:[%s])"%(re.escape(p.char),)
             elif isinstance(p,Word):
                 return "(?:%s)"%re.escape(p.word)
@@ -1357,7 +1360,7 @@ class Klass(Pattern):
             return EndOfText(self, source, pos)
         # case success
         char = source[pos]
-        
+
         # This way, Unicode characters, previously treated as bytes,
         # will pass; this is just a basic hack; a whole class allowing
         # ranges of characters would be far better.

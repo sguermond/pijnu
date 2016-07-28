@@ -163,7 +163,6 @@ def make_parser(actions=None):
             sys.path.insert(0, outputPath)
         else:
             sys.path.insert(0, os.getcwd())
-        print(sys.path)
         modulename = filename[:-3]
         module = importlib.import_module(modulename)
     finally:

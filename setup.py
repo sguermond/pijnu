@@ -33,7 +33,7 @@ long_description = """\
 """
 
 setup(name="pijnu",
-      version="20160727",
+      version="20160728",
       author="Denis Derman",
       author_email="denis.spir@gmail.com",
       maintainer="Peter Potrowl",
@@ -45,7 +45,7 @@ setup(name="pijnu",
       scripts=[],
       description="text parsing & processing tool",
       long_description=long_description,
-      install_requires=['py3compat'],
+      install_requires=['py3compat', 'importlib'],
       classifiers=[
           'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
           'Development Status :: 4 - Beta',

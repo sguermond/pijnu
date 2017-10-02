@@ -295,5 +295,5 @@ def writeFile(filename, text):
     ''' Write -- or overwrite -- text into file.
         --  No error if file exists '''
     f = open(filename, 'w')
-    f.write(text)
+    f.write(text.decode('utf-8'))
     f.close()

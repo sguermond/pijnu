@@ -81,6 +81,13 @@ Another example that will generate XHTML from wiki-text styled lines (possibly n
 
 The column on right side assigns transformations to patterns. `drop`, `join`, and `liftValue` are builtin. `styledSpan` is a custom transformation. `'@'` denotes a recursive pattern.
 
+Installation
+------------
+
+```
+pip install -e git+https://github.com/peter17/pijnu#egg=pijnu
+```
+
 Practical use
 -------------
 

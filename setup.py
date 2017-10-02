@@ -45,7 +45,7 @@ setup(name="pijnu",
       scripts=[],
       description="text parsing & processing tool",
       long_description=long_description,
-      install_requires=['py3compat', 'importlib'],
+      install_requires=['py3compat'],
       classifiers=[
           'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
           'Development Status :: 4 - Beta',
